@@ -267,6 +267,7 @@ const createProperty = async (req, res) => {
   }
 };
 
+
 // @desc    Get all properties
 // @route   GET /api/properties
 // @access  Public
@@ -333,7 +334,7 @@ const updateProperty = async (req, res) => {
       // Handle new images
       const newImages = [];
       if (req.files['images']) {
-        req.files['images'].forEach(image => {
+        req.files['images']?.forEach(image => {
           newImages.push({
             url: image.path,
             public_id: image.filename,
@@ -342,16 +343,16 @@ const updateProperty = async (req, res) => {
       }
       
       // Handle new videos
-      const newVideos = [];
-      if (req.files['videos']) {
-        req.files['videos'].forEach(video => {
-          newVideos.push({
-            url: video.path,
-            public_id: video.filename,
-            resource_type: video.resource_type,
-          });
-        });
-      }
+      // const newVideos = [];
+      // if (req.files['videos']) {
+      //   req.files['videos'].forEach(video => {
+      //     newVideos.push({
+      //       url: video.path,
+      //       public_id: video.filename,
+      //       resource_type: video.resource_type,
+      //     });
+      //   });
+      // }
       
       // Update property with new media
       property = await Property.findByIdAndUpdate(
@@ -360,7 +361,7 @@ const updateProperty = async (req, res) => {
           ...propertyData,
           $push: {
             images: { $each: newImages },
-            videos: { $each: newVideos },
+            // videos: { $each: newVideos },
           },
         },
         {
@@ -381,6 +382,51 @@ const updateProperty = async (req, res) => {
     });
   }
 };
+
+// const updateProperty = async (req, res) => {
+//   try {
+//     processUploads(req, res, async () => {
+//       let property = await Property.findById(req.params.id);
+//       if (!property) {
+//         return res.status(404).json({ success: false, message: 'Property not found' });
+//       }
+
+//       const propertyData = {
+//         ...req.body,
+//         location: req.body.location ? JSON.parse(req.body.location) : property.location,
+//       };
+
+//       // Parse fields that may have been sent as strings
+//       if (typeof propertyData.price === 'string') propertyData.price = parseFloat(propertyData.price);
+//       if (typeof propertyData.bedrooms === 'string') propertyData.bedrooms = parseInt(propertyData.bedrooms);
+//       if (typeof propertyData.area === 'string') propertyData.area = parseFloat(propertyData.area);
+
+//       const newImages = [];
+//       if (req.files && req.files['images']) {
+//         req.files['images'].forEach(image => {
+//           newImages.push({
+//             url: image.path,
+//             public_id: image.filename,
+//           });
+//         });
+//       }
+
+//       const updated = await Property.findByIdAndUpdate(
+//         req.params.id,
+//         {
+//           ...propertyData,
+//           $push: { images: { $each: newImages } },
+//         },
+//         { new: true, runValidators: true }
+//       );
+
+//       res.status(200).json({ success: true, data: updated });
+//     });
+//   } catch (err) {
+//     res.status(400).json({ success: false, message: err.message });
+//   }
+// };
+
 
 // @desc    Delete property
 // @route   DELETE /api/properties/:id

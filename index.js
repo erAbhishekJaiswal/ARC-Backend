@@ -3,7 +3,9 @@ const app = express();
 const port = 3000;
 const connectDB = require('./config/db.js');
 const userRoute = require('./routes/userRoute.js');
+const guestRoute = require('./routes/guestRoute.js');
 const cors = require('cors');
+const cookieParser = require('cookie-parser');
 
 
 
@@ -17,9 +19,11 @@ app.get('/', (req, res) => {
 app.use(cors());
 
 app.use(express.json());
+app.use(cookieParser());
 
 app.use('/api/user', userRoute)
 app.use('/api/property', require('./routes/propertyRoute.js'));
+app.use('/api/guest', guestRoute);
 
 app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}`);

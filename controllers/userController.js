@@ -86,15 +86,37 @@ exports.getUserById = async (req, res) => {
 };
 
 // Update user by ID
-// exports.updateUser = async (req, res) => {
-//     try {
-//         const user = await User.findByIdAndUpdate(req.params.id, req.body, { new: true });
-//         if (!user) {
-//             return res.status(404).json({ message: 'User not found' });
-//         }
-//         res.status(200).json({ message: 'User updated successfully', user });
-//     } catch (error) {
-//         res.status(500).json({ message: error.message });
-//     }
-// };
+exports.updateUser = async (req, res) => {
+    try {
+        const user = await User.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        res.status(200).json({ message: 'User updated successfully', user });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+// Geust login
+exports.guestLogin = async (req, res) => {
+    try {
+        // generate guest user id
+        const guestId = 'guest';
+
+        // Find user by email
+        const user = await User.findOne({ _id: guestId });
+
+        // If no user is found, return an error
+        if (!user) return res.status(400).json({ message: "User not found" });
+        
+
+        // Generate JWT with user ID and role
+        const token = jwt.sign({ id: 'guest', role: 'guest' }, 'gyaat12345', { expiresIn: '1h' });
+        res.cookie('token', token, { httpOnly: true, maxAge: 30 * 60 * 60 * 1000 });
+        res.status(200).json({ message: "Login successful", token });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
 

@@ -31,10 +31,12 @@ const propertySchema = new mongoose.Schema({
   description: String,
   price: Number,
   type: { type: String, enum: ['sale', 'rent'] },
+  category: String,
   location: {
     address: String,
     coordinates: { type: [Number], index: '2dsphere' } // [longitude, latitude]
   },
+  address: String,
   bedrooms: Number,
     area: {
     type: Number,
