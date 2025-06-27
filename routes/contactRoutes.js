@@ -56,4 +56,8 @@ router.get('/:id', contactController.getContactDetails);
 // Search contacts route
 router.get('/search', contactController.searchContacts);
 
+// filter contacts
+router.get('/filter', contactController.filterContacts);
+
+
 module.exports = router;

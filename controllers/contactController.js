@@ -497,78 +497,7 @@
 
 
 
-// const Contact = require('../models/Contact');
-// const xlsx = require('xlsx');
-// const fs = require('fs');
 
-// // Upload Excel and process data
-// exports.uploadExcel = async (req, res) => {
-//   try {
-//     if (!req.file) {
-//       return res.status(400).json({ message: 'No file uploaded' });
-//     }
-
-//     const workbook = xlsx.readFile(req.file.path);
-//     const sheetName = workbook.SheetNames[0];
-//     const worksheet = workbook.Sheets[sheetName];
-//     const jsonData = xlsx.utils.sheet_to_json(worksheet);
-
-//     // Map Excel columns to schema fields
-//     const mappedData = jsonData.map(item => ({
-//       firstName: item['First Name'] || '',
-//       lastName: item['Last Name'] || '',
-//       displayName: item['Display Name'] || '',
-//       nickname: item['Nickname'] || '',
-//       emailAddress: item['E-mail Address'] || '',
-//       email2Address: item['E-mail 2 Address'] || '',
-//       email3Address: item['E-mail 3 Address'] || '',
-//       homePhone: item['Home Phone'] || '',
-//       businessPhone: item['Business Phone'] || '',
-//       homeFax: item['Home Fax'] || '',
-//       businessFax: item['Business Fax'] || '',
-//       pager: item['Pager'] || '',
-//       mobilePhone: item['Mobile Phone'] || '',
-//       homeStreet: item['Home Street'] || '',
-//       homeAddress2: item['Home Address 2'] || '',
-//       homeCity: item['Home City'] || '',
-//       homeState: item['Home State'] || '',
-//       homePostalCode: item['Home Postal Code'] || '',
-//       homeCountry: item['Home Country'] || '',
-//       businessAddress: item['Business Address'] || '',
-//       businessAddress2: item['Business Address 2'] || '',
-//       businessCity: item['Business City'] || '',
-//       businessState: item['Business State'] || '',
-//       businessPostalCode: item['Business Postal Code'] || '',
-//       businessCountry: item['Business Country'] || '',
-//       countryCode: item['Country Code'] || '',
-//       relatedName: item['Related name'] || '',
-//       jobTitle: item['Job Title'] || '',
-//       department: item['Department'] || '',
-//       organization: item['Organization'] || '',
-//       notes: item['Notes'] || '',
-//       birthday: item['Birthday'] || null,
-//       anniversary: item['Anniversary'] || null,
-//       gender: item['Gender'] || '',
-//       webPage: item['Web Page'] || '',
-//       webPage2: item['Web Page 2'] || '',
-//       categories: item['Categories'] || ''
-//     }));
-
-//     // Insert into MongoDB
-//     await Contact.insertMany(mappedData);
-
-//     // Delete the uploaded file
-//     fs.unlinkSync(req.file.path);
-
-//     res.status(201).json({ 
-//       message: 'Data uploaded successfully', 
-//       count: mappedData.length 
-//     });
-//   } catch (error) {
-//     console.error('Error uploading data:', error);
-//     res.status(500).json({ message: 'Error processing file', error: error.message });
-//   }
-// };
 
 
 
@@ -717,33 +646,249 @@ exports.uploadExcel = async (req, res) => {
 };
 
 // List all contacts with pagination
+// exports.listContacts = async (req, res) => {
+//   // try {
+//   //   const page = parseInt(req.query.page) || 1;
+//   //   const limit = parseInt(req.query.limit) || 10;
+//   //   const skip = (page - 1) * limit;
+//   //     const search = req.query.search || '';
+
+//   //   // const contacts = await Contact.find()
+//   //   //   .skip(skip)
+//   //   //   .limit(limit)
+//   //   //   .sort({ createdAt: -1 });
+
+//   //   const query = {
+//   //   $or: [
+//   //     { firstName: new RegExp(search, 'i') },
+//   //     { lastName: new RegExp(search, 'i') },
+//   //     { mobilePhone: new RegExp(search, 'i') }
+//   //   ]
+//   // };
+
+//   // const total = await Contact.countDocuments(query);
+//   // const contacts = await Contact.find(query)
+//   //   .skip(skip)
+//   //   .limit(limit)
+//   //   .lean();
+
+//   //   // const total = await Contact.countDocuments();
+
+//   //   res.status(200).json({
+//   //     contacts,
+//   //     total,
+//   //     pages: Math.ceil(total / limit),
+//   //     currentPage: page
+//   //   });
+//   // } catch (error) {
+//   //   res.status(500).json({ message: 'Error fetching contacts', error: error.message });
+//   // }
+
+
+
+
+
+
+//   // With Filter 
+
+
+//   //   try {
+//   //   const page = parseInt(req.query.page) || 1;
+//   //   const limit = parseInt(req.query.limit) || 10;
+//   //   const skip = (page - 1) * limit;
+
+//   //   const {
+//   //     search = '',
+//   //     gender,
+//   //     organization,
+//   //     jobTitle,
+//   //     homeCity,
+//   //     homeState,
+//   //     businessState,
+//   //   } = req.query;
+
+//   //   // Base query
+//   //   const query = {
+//   //     $and: []
+//   //   };
+
+//   //   // Search string (partial match across multiple fields)
+//   //   if (search) {
+//   //     const searchRegex = new RegExp(search, 'i');
+//   //     query.$and.push({
+//   //       $or: [
+//   //         { firstName: searchRegex },
+//   //         { lastName: searchRegex },
+//   //         { displayName: searchRegex },
+//   //         { mobilePhone: searchRegex },
+//   //         { emailAddress: searchRegex },
+//   //         { organization: searchRegex },
+//   //       ]
+//   //     });
+//   //   }
+
+//   //   // Optional filters (exact matches)
+//   //   if (gender) query.$and.push({ gender });
+//   //   if (organization) query.$and.push({ organization });
+//   //   if (jobTitle) query.$and.push({ jobTitle });
+//   //   if (homeCity) query.$and.push({ homeCity });
+//   //   if (homeState) query.$and.push({ homeState });
+//   //   if (businessState) query.$and.push({ businessState });
+
+//   //   // If no conditions added, default to empty query (fetch all)
+//   //   if (query.$and.length === 0) delete query.$and;
+
+//   //   const total = await Contact.countDocuments(query);
+//   //   const contacts = await Contact.find(query)
+//   //     .skip(skip)
+//   //     .limit(limit)
+//   //     .sort({ createdAt: -1 })
+//   //     .lean();
+
+//   //   res.status(200).json({
+//   //     contacts,
+//   //     total,
+//   //     pages: Math.ceil(total / limit),
+//   //     currentPage: page
+//   //   });
+//   // } catch (error) {
+//   //   res.status(500).json({
+//   //     message: 'Error fetching contacts',
+//   //     error: error.message
+//   //   });
+//   // }
+
+
+
+
+
+
+
+
+
+//   try {
+//     const page = parseInt(req.query.page) || 1;
+//     const limit = parseInt(req.query.limit) || 10;
+//     const skip = (page - 1) * limit;
+
+//     const {
+//       search = '',
+//       gender,
+//       organization,
+//       jobTitle,
+//       homeCity,
+//       homeState,
+//       businessState,
+//       sort = 'asc', // default A–Z
+//     } = req.query;
+
+//     const query = { $and: [] };
+
+//     if (search) {
+//       const regex = new RegExp(search, 'i');
+//       query.$and.push({
+//         $or: [
+//           { firstName: regex },
+//           { lastName: regex },
+//           { displayName: regex },
+//           { mobilePhone: regex },
+//           { emailAddress: regex },
+//           { organization: regex },
+//         ]
+//       });
+//     }
+
+//     if (gender) query.$and.push({ gender });
+//     if (organization) query.$and.push({ organization });
+//     if (jobTitle) query.$and.push({ jobTitle });
+//     if (homeCity) query.$and.push({ homeCity });
+//     if (homeState) query.$and.push({ homeState });
+//     if (businessState) query.$and.push({ businessState });
+
+//     if (query.$and.length === 0) delete query.$and;
+
+//     // Sorting based on firstName + lastName
+//     const sortOrder = sort === 'desc' ? -1 : 1;
+
+//     const total = await Contact.countDocuments(query);
+//     const contacts = await Contact.find(query)
+//       .skip(skip)
+//       .limit(limit)
+//       .sort({ firstName: sortOrder, lastName: sortOrder }) // sort by name
+//       .lean();
+
+//     res.status(200).json({
+//       contacts,
+//       total,
+//       pages: Math.ceil(total / limit),
+//       currentPage: page
+//     });
+//   } catch (error) {
+//     res.status(500).json({
+//       message: 'Error fetching contacts',
+//       error: error.message
+//     });
+//   }
+
+
+
+
+// };
+
+
 exports.listContacts = async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
     const skip = (page - 1) * limit;
-      const search = req.query.search || '';
 
-    // const contacts = await Contact.find()
-    //   .skip(skip)
-    //   .limit(limit)
-    //   .sort({ createdAt: -1 });
+    const {
+      search = '',
+      gender,
+      organization,
+      jobTitle,
+      homeCity,
+      homeState,
+      businessState,
+      sort = 'asc', // default A–Z
+    } = req.query;
 
-    const query = {
-    $or: [
-      { firstName: new RegExp(search, 'i') },
-      { lastName: new RegExp(search, 'i') },
-      { mobilePhone: new RegExp(search, 'i') }
-    ]
-  };
+    const query = { $and: [] };
 
-  const total = await Contact.countDocuments(query);
-  const contacts = await Contact.find(query)
-    .skip(skip)
-    .limit(limit)
-    .lean();
+    // Exclude contacts with missing firstName
+    query.$and.push({ firstName: { $ne: null, $ne: '' } });
 
-    // const total = await Contact.countDocuments();
+    if (search) {
+      const regex = new RegExp(search, 'i');
+      query.$and.push({
+        $or: [
+          { firstName: regex },
+          { lastName: regex },
+          { displayName: regex },
+          { mobilePhone: regex },
+          { emailAddress: regex },
+          { organization: regex },
+        ]
+      });
+    }
+
+    if (gender) query.$and.push({ gender });
+    if (organization) query.$and.push({ organization });
+    if (jobTitle) query.$and.push({ jobTitle });
+    if (homeCity) query.$and.push({ homeCity });
+    if (homeState) query.$and.push({ homeState });
+    if (businessState) query.$and.push({ businessState });
+
+    if (query.$and.length === 0) delete query.$and;
+
+    const sortOrder = sort === 'desc' ? -1 : 1;
+
+    const total = await Contact.countDocuments(query);
+    const contacts = await Contact.find(query)
+      .skip(skip)
+      .limit(limit)
+      .sort({ firstName: sortOrder, lastName: sortOrder })
+      .lean();
 
     res.status(200).json({
       contacts,
@@ -752,9 +897,13 @@ exports.listContacts = async (req, res) => {
       currentPage: page
     });
   } catch (error) {
-    res.status(500).json({ message: 'Error fetching contacts', error: error.message });
+    res.status(500).json({
+      message: 'Error fetching contacts',
+      error: error.message
+    });
   }
 };
+
 
 // Get single contact details
 exports.getContactDetails = async (req, res) => {
@@ -792,5 +941,74 @@ exports.searchContacts = async (req, res) => {
     res.status(200).json(contacts);
   } catch (error) {
     res.status(500).json({ message: 'Error searching contacts', error: error.message });
+  }
+};
+
+
+exports.filterContacts = async (req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+
+    const {
+      search = '',
+      gender,
+      organization,
+      jobTitle,
+      homeCity,
+      homeState,
+      businessState,
+    } = req.query;
+
+    // Base query
+    const query = {
+      $and: []
+    };
+
+    // Search string (partial match across multiple fields)
+    if (search) {
+      const searchRegex = new RegExp(search, 'i');
+      query.$and.push({
+        $or: [
+          { firstName: searchRegex },
+          { lastName: searchRegex },
+          { displayName: searchRegex },
+          { mobilePhone: searchRegex },
+          { emailAddress: searchRegex },
+          { organization: searchRegex },
+        ]
+      });
+    }
+
+    // Optional filters (exact matches)
+    if (gender) query.$and.push({ gender });
+    if (organization) query.$and.push({ organization });
+    if (jobTitle) query.$and.push({ jobTitle });
+    if (homeCity) query.$and.push({ homeCity });
+    if (homeState) query.$and.push({ homeState });
+    if (businessState) query.$and.push({ businessState });
+
+    // If no conditions added, default to empty query (fetch all)
+    if (query.$and.length === 0) delete query.$and;
+
+    const total = await Contact.countDocuments(query);
+    const contacts = await Contact.find(query)
+      .skip(skip)
+      .limit(limit)
+      .sort({ createdAt: -1 })
+      .lean();
+
+    res.status(200).json({
+      contacts,
+      total,
+      pages: Math.ceil(total / limit),
+      currentPage: page
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: 'Error fetching contacts',
+      error: error.message
+    });
   }
 };
