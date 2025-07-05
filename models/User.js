@@ -13,7 +13,16 @@ const UserSchema = new mongoose.Schema({
     type: { type: String, enum: ['aadhaar', 'pan', 'ownership_proof'] }, // 'aadhaar', 'pan', 'ownership_proof'
     url: String
   }],
-  banned: { type: Boolean, default: false }
+  banned: { type: Boolean, default: false },
+  deviceFingerprint: { type: String },
+  ip: { type: String },
+  userAgent: { type: String },
+  lastActive: { type: Date, default: Date.now },
+  activityLog: [{
+      action: String,
+      timestamp: { type: Date, default: Date.now },
+      metadata: mongoose.Schema.Types.Mixed
+    }]
 });
 const User = mongoose.model('User', UserSchema);
 module.exports = User;
